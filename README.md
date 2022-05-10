@@ -261,4 +261,22 @@ Lets create craete the Persistent Volume Claim
 ```
 kubectl create -f pvc.yaml
 ```
+After deploying the manifest files, let make sure whether the application pods are running
+```
+kubectl get pod
+```
+![Screen Shot 2022-05-10 at 3 27 56 PM](https://user-images.githubusercontent.com/35251635/167602909-4d93d8df-db02-4db2-8caa-28dcc05dd091.png)
+
+Lets check the creation of storage class, pv and pvc
+
+![Screen Shot 2022-05-10 at 3 31 35 PM](https://user-images.githubusercontent.com/35251635/167603710-34ed9aac-3e93-41c8-ac97-d04a7384ebd1.png)
+
+You can see above that the pvc is bound to pv
+
+Now lets check for the services
+
+![Screen Shot 2022-05-10 at 3 35 59 PM](https://user-images.githubusercontent.com/35251635/167604591-2eb3a0cc-7663-4fcb-94d3-e78622c45cb8.png)
+
+
+Lets access the Php application using localhost ip and the nginx nodeport
 
