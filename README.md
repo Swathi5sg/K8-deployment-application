@@ -254,6 +254,7 @@ Create a local storage
 kubectl create -f storageclass.yaml
 ```
 Now lets create Persistent Volume by using this storage class we just created
+
 This is the Persistent Volume file
 ```
 apiVersion: v1
@@ -284,6 +285,7 @@ Create Persistent Volume
 kubectl create -f pv.yaml
 ```
 Now go ahead and create a Persistent Volume Claim to hold your application code and configuration files
+
 Persistent Volume Claim file
 ```
 apiVersion: v1
