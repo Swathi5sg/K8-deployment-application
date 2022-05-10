@@ -146,6 +146,40 @@ applying the above service for nginx
 ```
 kubectl create -f nginx_service.yaml
 ```
+Lets craete a ConfigMap for nginx and it keeps all your required configurations in a key-value format
+This is the nginx configmap file
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  labels:
+    tier: backend
+data:
+  config : |
+    server {
+      index index.php index.html;
+      error_log  /var/log/nginx/error.log;
+      access_log /var/log/nginx/access.log;
+      root /code;
+      location / {
+          try_files $uri $uri/ /index.php?$query_string;
+      }
+      location ~ \.php$ {
+          try_files $uri =404;
+          fastcgi_split_path_info ^(.+\.php)(/.+)$;
+          fastcgi_pass php:9000;
+          fastcgi_index index.php;
+          include fastcgi_params;
+          fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+          fastcgi_param PATH_INFO $fastcgi_path_info;
+        }
+    }
+```
+Lets deploy this configmap
+```
+kubectl create -f nginx_configMap.yaml
+```
 Now lets deploy the databse for the this setup, where we have defined deployment, service and scecret in a single file
 ```
 ---
