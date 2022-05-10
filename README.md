@@ -181,7 +181,7 @@ Lets deploy this configmap
 ```
 kubectl create -f nginx_configMap.yaml
 ```
-Now lets deploy the databse for the this setup, where we have defined deployment, service and scecret in a single file
+Now lets deploy the databse for the this setup, where we have defined deployment, service and secret in a single file
 ```
 ---
 apiVersion: v1
