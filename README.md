@@ -140,3 +140,58 @@ spec:
   - protocol: TCP
     port: 80
 ```    
+applying the above service for nginx
+```
+kubectl create -f nginx_service.yaml
+```
+Now lets deploy the databse for the this setup, where we have defined deployment, service and scecret in a single file
+```
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mysql-secret
+stringData:
+  password: mysql
+type: Opaque  
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+    tier: backend
+spec:
+  containers:
+  - image: mysql:5.6
+    name: mysql
+    env:
+    - name: MYSQL_ROOT_PASSWORD
+      valueFrom:
+        secretKeyRef:
+           name: mysql-secret
+           key: password
+    ports:
+    - containerPort: 3306
+      name: mysql
+    volumeMounts:
+    - name: mysql-persistent-storage
+      mountPath: /var/lib/mysql
+  volumes:
+  - name: mysql-persistent-storage
+    persistentVolumeClaim:
+      claimName: code
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: mysql
+    tier: backend
+```
+
