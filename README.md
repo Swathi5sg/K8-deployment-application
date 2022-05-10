@@ -3,6 +3,8 @@ This is a 3-tier application with mysql as databse, Php as web application and n
 
 We are deplpoying this multi-tier application using yaml file manifests in kubernetes as a separate containers.
 
+### 1. Deploying the application using the manifest files
+
 This is the deployment file for the Php appliaction
 ```
 apiVersion: apps/v1
@@ -56,7 +58,7 @@ Lets create the deployment for Php application
 kubectl create -f php_deployment.yaml
 ```
 
-This the service file for Php which enables the accesssability to the application
+This is the service file for Php which enables the accesssability to the application
 ```
 apiVersion: v1
 kind: Service
@@ -194,8 +196,12 @@ spec:
     app: mysql
     tier: backend
 ```
+deploy the databse application
+```
+kubectl create -f mysql-deployment.yaml
+```
 
-Lets create Local Storage and Persistent Volume
+### 2. Creating Local Storage and Persistent Volume
 
 create a local StorageClass which can be further used for creating Persistent Volume
 
@@ -213,7 +219,7 @@ Create a local storage
 kubectl create -f storageclass.yaml
 ```
 Now lets create Persistent Volume by using this storage class we just created
-Persistent Volume file
+This is the Persistent Volume file
 ```
 apiVersion: v1
 kind: PersistentVolume
@@ -261,6 +267,8 @@ Lets create craete the Persistent Volume Claim
 ```
 kubectl create -f pvc.yaml
 ```
+
+### 3. Verifying and accessing the application
 After deploying the manifest files, let make sure whether the application pods are running
 ```
 kubectl get pod
