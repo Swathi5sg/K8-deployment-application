@@ -26,6 +26,12 @@ spec:
         volumeMounts:
         - name: code
           mountPath: /code
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: password
       initContainers:
       - name: install
         image: busybox
