@@ -146,7 +146,7 @@ applying the above service for nginx
 ```
 kubectl create -f nginx_service.yaml
 ```
-Lets craete a ConfigMap for nginx and it keeps all your required configurations in a key-value format
+Lets create a ConfigMap for nginx and it keeps all your required configurations in a key-value format
 This is the nginx configmap file
 ```
 apiVersion: v1
