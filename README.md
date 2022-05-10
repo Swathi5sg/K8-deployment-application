@@ -195,3 +195,70 @@ spec:
     tier: backend
 ```
 
+Lets create Local Storage and Persistent Volume
+
+create a local StorageClass which can be further used for creating Persistent Volume
+
+This is the StorageClass file with storage name "my-local-storage"
+```
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: my-local-storage
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: Immediate
+```
+Create a local storage
+```
+kubectl create -f storageclass.yaml
+```
+Now lets create Persistent Volume by using this storage class we just created
+Persistent Volume file
+```
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: my-local-pv
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: my-local-storage
+  local:
+    path: /mnt/disk/vol
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - dev928
+```
+
+Create Persistent Volume
+```
+kubectl create -f pv.yaml
+```
+Now go ahead and create a Persistent Volume Claim to hold your application code and configuration files
+Persistent Volume Claim file
+```
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: code
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: my-local-storage
+```
+Lets create craete the Persistent Volume Claim
+```
+kubectl create -f pvc.yaml
+```
+
