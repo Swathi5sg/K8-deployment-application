@@ -1,1 +1,79 @@
 # K8-deployment-application
+This is a 3-tier application with mysql as databse, Php as web application and nginx as reverse-proxy.
+
+We are deplpoying this multi-tier application using yaml file manifests in kubernetes as a separate containers.
+
+This is the deployment file for the Php appliaction
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php
+  labels:
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: php
+        tier: backend
+    spec:
+      volumes:
+      - name: code
+        persistentVolumeClaim:
+          claimName: code
+      containers:
+      - name: php
+        image: php:7-fpm
+        volumeMounts:
+        - name: code
+          mountPath: /code
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mysql-secret
+                key: password
+      initContainers:
+      - name: install
+        image: busybox
+        volumeMounts:
+        - name: code
+          mountPath: /code
+        command:
+        - wget
+        - "-O"
+        - "/code/index.php"
+        - https://raw.githubusercontent.com/do-community/php-kubernetes/master/index.php
+  ```
+Lets create the deployment for Php application
+```
+kubectl create -f php_deployment.yaml
+```
+
+This the service file for Php which enables the accesssability to the application
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: php
+  labels:
+    tier: backend
+spec:
+  selector:
+    app: php
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 9000
+```
+
+Lets apply this service
+```
+kubectl create -f php_service.yaml
+```
