@@ -280,3 +280,4 @@ Now lets check for the services
 
 Lets access the Php application using localhost ip and the nginx nodeport
 
+![Screen Shot 2022-05-10 at 3 38 20 PM](https://user-images.githubusercontent.com/35251635/167604993-f9dd6c88-4a43-4880-8e26-344e9b646b4c.png)
