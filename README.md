@@ -77,3 +77,66 @@ Lets apply this service
 ```
 kubectl create -f php_service.yaml
 ```
+Now lets go to Nginx section
+
+This is the nginx deployment file
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    tier: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: nginx
+        tier: backend
+    spec:
+      volumes:
+      - name: code
+        persistentVolumeClaim:
+          claimName: code
+      - name: config
+        configMap:
+          name: nginx-config
+          items:
+          - key: config
+            path: site.conf
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: code
+          mountPath: /code
+        - name: config
+          mountPath: /etc/nginx/conf.d
+```          
+Lets deploy the nginx
+```
+kubectl create -f nginx_deployment.yaml
+```
+Srvice file for nginx
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    tier: backend
+spec:
+  selector:
+    app: nginx
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 80
+```    
